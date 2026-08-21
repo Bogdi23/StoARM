@@ -83,5 +83,18 @@ namespace StoARM
                             LEFT JOIN Inventory i ON o.part_id = i.part_id";
 			return ExecuteQuery(query);
 		}
+
+		public static void AddClient(string lastName, string firstName, string middleName, string phone_number)
+		{
+			string query = @"INSERT INTO Clients (last_name, first_name, middle_name, phone_number) 
+                    VALUES (@last_name, @first_name, @middle_name, @phone_number)";
+			SqlParameter[] parameters = {
+				new SqlParameter("@last_name", lastName),
+				new SqlParameter("@first_name", firstName),
+				new SqlParameter("@middle_name", string.IsNullOrWhiteSpace(middleName) ? (object)DBNull.Value : middleName),
+				new SqlParameter("@phone_number", phone_number)
+			};
+			ExecuteNonQuery(query, parameters);
+		}
 	}
 }

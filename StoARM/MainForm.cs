@@ -46,16 +46,22 @@ namespace StoARM
 		}
 		private void btnAdd_Click(object sender, EventArgs e)
 		{
-			// Получаем название активной вкладки (проверь, чтобы ваш TabControl назывался tabControl1)
 			string activeTab = tabControl1.SelectedTab.Text;
 
 			if (activeTab == "Клиенты")
 			{
-				MessageBox.Show("Здесь мы скоро откроем форму создания клиента!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				AddEditClientForm clientForm = new AddEditClientForm();
+
+				// Открываем форму модально. Если пользователь нажал "Сохранить", обновляем таблицы
+				if (clientForm.ShowDialog() == DialogResult.OK)
+				{
+					RefreshAllData();
+					MessageBox.Show("Новый клиент успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
 			}
 			else
 			{
-				MessageBox.Show($"Форму добавления для вкладки '{activeTab}' подключаем следующим шагом.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show($"Форму добавления для вкладки '{activeTab}' сделаем следующей.", "Информация");
 			}
 		}
 		private void btnDelete_Click(object sender, EventArgs e)
