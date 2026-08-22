@@ -65,7 +65,7 @@ namespace StoARM
 		public static DataTable GetCars()
 		{
 			string query = @"SELECT c.car_id AS [ID], c.brand AS [Марка], c.model AS [Модель], c.license_plate AS [Гос. номер], 
-                            cl.last_name + ' ' + cl.first_name AS [Владелец] 
+                            c.vin_code AS [VIN-код], cl.last_name + ' ' + cl.first_name AS [Владелец] 
                             FROM Cars c 
                             JOIN Clients cl ON c.client_id = cl.client_id";
 			return ExecuteQuery(query);

@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddEditCarForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddEditCarForm.Designer.cs">
+      <DependentUpon>AddEditCarForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AddEditClientForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,6 +67,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddEditCarForm.resx">
+      <DependentUpon>AddEditCarForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddEditClientForm.resx">
       <DependentUpon>AddEditClientForm.cs</DependentUpon>
     </EmbeddedResource>

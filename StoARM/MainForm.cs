@@ -59,6 +59,16 @@ namespace StoARM
 					MessageBox.Show("Новый клиент успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
+			else if (activeTab == "Автомобили")
+			{
+				AddEditCarForm carForm = new AddEditCarForm();
+
+				if (carForm.ShowDialog() == DialogResult.OK)
+				{
+					RefreshAllData();
+					MessageBox.Show("Новый автомобиль успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
+			}
 			else
 			{
 				MessageBox.Show($"Форму добавления для вкладки '{activeTab}' сделаем следующей.", "Информация");
