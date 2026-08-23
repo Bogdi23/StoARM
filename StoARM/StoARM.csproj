@@ -64,6 +64,12 @@
     <Compile Include="AddEditInventoryForm.Designer.cs">
       <DependentUpon>AddEditInventoryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddEditOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddEditOrderForm.Designer.cs">
+      <DependentUpon>AddEditOrderForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AddEditServiceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddEditInventoryForm.resx">
       <DependentUpon>AddEditInventoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditOrderForm.resx">
+      <DependentUpon>AddEditOrderForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddEditServiceForm.resx">
       <DependentUpon>AddEditServiceForm.cs</DependentUpon>

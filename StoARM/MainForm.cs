@@ -89,6 +89,16 @@ namespace StoARM
 					MessageBox.Show("Новая запчасть успешно добавлена на склад!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
+			else if (activeTab == "Заказы")
+			{
+				AddEditOrderForm orderForm = new AddEditOrderForm();
+
+				if (orderForm.ShowDialog() == DialogResult.OK)
+				{
+					RefreshAllData();
+					MessageBox.Show("Новый заказ успешно оформлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
+			}
 			else
 			{
 				MessageBox.Show($"Форму добавления для вкладки '{activeTab}' сделаем следующей.", "Информация");

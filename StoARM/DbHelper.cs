@@ -73,14 +73,21 @@ namespace StoARM
 
 		public static DataTable GetOrders()
 		{
-			string query = @"SELECT o.order_id AS [№ Заказа], o.order_date AS [Дата], o.status AS [Статус],
-                            c.brand + ' ' + c.model + ' (' + c.license_plate + ')' AS [Автомобиль],
-                            s.name AS [Услуга],
-                            ISNULL(i.part_name, 'Без запчастей') AS [Запчасть]
-                            FROM Orders o
-                            JOIN Cars c ON o.car_id = c.car_id
-                            JOIN Services s ON o.service_id = s.service_id
-                            LEFT JOIN Inventory i ON o.part_id = i.part_id";
+			string query = @"
+				SELECT 
+					o.order_id AS [№ Заказа],
+					o.order_date AS [Дата],
+					o.status AS [Статус],
+					c.brand + ' ' + c.model + ' (' + c.license_plate + ')' AS [Автомобиль],
+					s.name AS [Услуга],
+					ISNULL(i.part_type + N': ' + i.part_name, N'--- Без запчастей ---') AS [Запчасть],
+					CAST((s.price + ISNULL(i.price, 0)) AS DECIMAL(18,2)) AS [Итого (руб)]
+				FROM Orders o
+				INNER JOIN Cars c ON o.car_id = c.car_id
+				INNER JOIN Services s ON o.service_id = s.service_id
+				LEFT JOIN Inventory i ON o.part_id = i.part_id
+				ORDER BY o.order_date DESC";
+
 			return ExecuteQuery(query);
 		}
 
