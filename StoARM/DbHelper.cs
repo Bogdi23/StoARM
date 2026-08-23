@@ -59,7 +59,7 @@ namespace StoARM
 
 		public static DataTable GetInventory()
 		{
-			return ExecuteQuery("SELECT part_id AS [ID], part_name AS [Запчасть], price AS [Цена], quantity AS [Остаток] FROM Inventory");
+			return ExecuteQuery("SELECT part_id AS [ID], part_type AS [Категория], part_name AS [Название], price AS [Цена (руб)], quantity AS [Остаток] FROM Inventory");
 		}
 
 		public static DataTable GetCars()
