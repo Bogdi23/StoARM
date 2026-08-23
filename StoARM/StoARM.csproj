@@ -58,6 +58,12 @@
     <Compile Include="AddEditClientForm.Designer.cs">
       <DependentUpon>AddEditClientForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddEditServiceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddEditServiceForm.Designer.cs">
+      <DependentUpon>AddEditServiceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DbHelper.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -72,6 +78,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddEditClientForm.resx">
       <DependentUpon>AddEditClientForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditServiceForm.resx">
+      <DependentUpon>AddEditServiceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

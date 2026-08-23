@@ -69,6 +69,16 @@ namespace StoARM
 					MessageBox.Show("Новый автомобиль успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
+			else if (activeTab == "Услуги")
+			{
+				AddEditServiceForm serviceForm = new AddEditServiceForm();
+
+				if (serviceForm.ShowDialog() == DialogResult.OK)
+				{
+					RefreshAllData();
+					MessageBox.Show("Новая услуга успешно добавлена!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
+			}
 			else
 			{
 				MessageBox.Show($"Форму добавления для вкладки '{activeTab}' сделаем следующей.", "Информация");
