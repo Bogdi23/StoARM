@@ -43,6 +43,7 @@
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
 			this.btnAdd = new System.Windows.Forms.Button();
+			this.btnEdit = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridOrders)).BeginInit();
@@ -193,6 +194,7 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.btnEdit);
 			this.panel1.Controls.Add(this.btnRefresh);
 			this.panel1.Controls.Add(this.btnDelete);
 			this.panel1.Controls.Add(this.btnAdd);
@@ -238,6 +240,18 @@
 			this.btnAdd.UseVisualStyleBackColor = true;
 			this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
 			// 
+			// btnEdit
+			// 
+			this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnEdit.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.btnEdit.Location = new System.Drawing.Point(446, 9);
+			this.btnEdit.Name = "btnEdit";
+			this.btnEdit.Size = new System.Drawing.Size(135, 34);
+			this.btnEdit.TabIndex = 3;
+			this.btnEdit.Text = "Изменить";
+			this.btnEdit.UseVisualStyleBackColor = true;
+			this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -281,6 +295,7 @@
 		private System.Windows.Forms.Button btnAdd;
 		private System.Windows.Forms.Button btnDelete;
 		private System.Windows.Forms.Button btnRefresh;
+		private System.Windows.Forms.Button btnEdit;
 	}
 }
 

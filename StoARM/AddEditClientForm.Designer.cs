@@ -177,6 +177,7 @@
 			this.Name = "AddEditClientForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Новый клиент";
+			this.Load += new System.EventHandler(this.AddEditClientForm_Load);
 			this.pnlHeader.ResumeLayout(false);
 			this.pnlHeader.PerformLayout();
 			this.ResumeLayout(false);

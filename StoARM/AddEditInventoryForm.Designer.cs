@@ -176,6 +176,7 @@
 			this.Name = "AddEditInventoryForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Склад";
+			this.Load += new System.EventHandler(this.AddEditInventoryForm_Load);
 			this.pnlHeader.ResumeLayout(false);
 			this.pnlHeader.PerformLayout();
 			this.ResumeLayout(false);

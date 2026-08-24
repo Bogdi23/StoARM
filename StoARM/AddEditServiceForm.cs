@@ -14,14 +14,36 @@ namespace StoARM
 {
 	public partial class AddEditServiceForm : Form
 	{
-		public AddEditServiceForm()
+		private int _serviceId = 0;
+		public AddEditServiceForm(int serviceId = 0)
 		{
 			InitializeComponent();
+			_serviceId = serviceId;
 		}
 
 		private void AddEditServiceForm_Load(object sender, EventArgs e)
 		{
+			if (_serviceId > 0)
+			{
+				this.Text = "Редактирование услуги №" + _serviceId;
 
+				try
+				{
+					string query = "SELECT name, price FROM Services WHERE service_id = " + _serviceId;
+					DataTable dt = DbHelper.ExecuteQuery(query);
+
+					if (dt.Rows.Count > 0)
+					{
+						DataRow row = dt.Rows[0];
+						tbName.Text = row["name"].ToString();
+						tbPrice.Text = row["price"].ToString();
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Ошибка при загрузке данных услуги: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
 		}
 		private void btnSave_Click(object sender, EventArgs e)
 		{
@@ -41,15 +63,28 @@ namespace StoARM
 
 			try
 			{
-				// SQL-запрос для добавления услуги
-				string query = "INSERT INTO Services (name, price) VALUES (@name, @price)";
-
+				// Формируем параметры один раз
 				SqlParameter[] parameters = {
 					new SqlParameter("@name", tbName.Text.Trim()),
 					new SqlParameter("@price", price) // Передаем проверенное число
-				};
+                };
 
-				DbHelper.ExecuteNonQuery(query, parameters);
+				if (_serviceId == 0)
+				{
+					// === ДОБАВЛЕНИЕ НОВОЙ УСЛУГИ (INSERT) ===
+					string query = "INSERT INTO Services (name, price) VALUES (@name, @price)";
+					DbHelper.ExecuteNonQuery(query, parameters);
+				}
+				else
+				{
+					// === ОБНОВЛЕНИЕ СУЩЕСТВУЮЩЕЙ (UPDATE) ===
+					string query = @"
+                        UPDATE Services 
+                        SET name = @name, 
+                            price = @price 
+                        WHERE service_id = " + _serviceId;
+					DbHelper.ExecuteNonQuery(query, parameters);
+				}
 
 				this.DialogResult = DialogResult.OK;
 				this.Close();

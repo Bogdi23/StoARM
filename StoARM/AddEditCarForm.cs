@@ -8,26 +8,56 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace StoARM
 {
 	public partial class AddEditCarForm : Form
 	{
-		public AddEditCarForm()
+		private int _carId = 0;
+		public AddEditCarForm(int carId = 0)
 		{
 			InitializeComponent();
+			_carId = carId;
 		}
 
 		private void AddEditCarForm_Load(object sender, EventArgs e)
 		{
-			// Загружаем клиентов через твой класс DbHelper
-			string query = "SELECT client_id, CONCAT(last_name, ' ', first_name) AS FullName FROM Clients";
-			DataTable clientsTable = DbHelper.ExecuteQuery(query);
+			try
+			{
+				// Загружаем клиентов (твой исходный код)
+				string clientsQuery = "SELECT client_id, CONCAT(last_name, ' ', first_name) AS FullName FROM Clients";
+				DataTable clientsTable = DbHelper.ExecuteQuery(clientsQuery);
 
-			// Привязываем таблицу к ComboBox
-			cmbClients.DataSource = clientsTable;
-			cmbClients.DisplayMember = "FullName"; // То, что видит пользователь
-			cmbClients.ValueMember = "client_id";  // То, что сохраняется в базу (ID клиента)
+				cmbClients.DataSource = clientsTable;
+				cmbClients.DisplayMember = "FullName";
+				cmbClients.ValueMember = "client_id";
+
+				// 3. Подтягиваем данные, если это редактирование
+				if (_carId > 0)
+				{
+					this.Text = "Редактирование автомобиля №" + _carId;
+
+					string getCarQuery = "SELECT brand, model, license_plate, vin_code, client_id FROM Cars WHERE car_id = " + _carId;
+					DataTable dt = DbHelper.ExecuteQuery(getCarQuery);
+
+					if (dt.Rows.Count > 0)
+					{
+						DataRow row = dt.Rows[0];
+						tbBrand.Text = row["brand"].ToString();
+						tbModel.Text = row["model"].ToString();
+						tbPlate.Text = row["license_plate"].ToString();
+						tbVIN.Text = row["vin_code"].ToString();
+
+						// Выбираем владельца в выпадающем списке
+						cmbClients.SelectedValue = row["client_id"];
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Ошибка при загрузке данных авто: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
 		}
 		private void btnSave_Click(object sender, EventArgs e)
 		{
@@ -39,22 +69,48 @@ namespace StoARM
 				return;
 			}
 
-			// Сохраняем в базу, используя твой метод DbHelper
-			string query = @"INSERT INTO Cars (brand, model, license_plate, vin_code, client_id) 
-                     VALUES (@brand, @model, @plate, @vin, @client_id)";
+			try
+			{
+				// Формируем параметры один раз для обоих случаев
+				SqlParameter[] parameters = {
+					new SqlParameter("@brand", tbBrand.Text.Trim()),
+					new SqlParameter("@model", tbModel.Text.Trim()),
+					new SqlParameter("@plate", tbPlate.Text.Trim()),
+					new SqlParameter("@vin", tbVIN.Text.Trim()),
+					new SqlParameter("@client_id", cmbClients.SelectedValue)
+				};
 
-			SqlParameter[] parameters = {
-				new SqlParameter("@brand", tbBrand.Text.Trim()),
-				new SqlParameter("@model", tbModel.Text.Trim()),
-				new SqlParameter("@plate", tbPlate.Text.Trim()),
-				new SqlParameter("@vin", tbVIN.Text.Trim()),
-				new SqlParameter("@client_id", cmbClients.SelectedValue) // Берем ID выбранного клиента
-			};
+				if (_carId == 0)
+				{
+					// === ДОБАВЛЕНИЕ (INSERT) ===
+					string query = @"
+                        INSERT INTO Cars (brand, model, license_plate, vin_code, client_id) 
+                        VALUES (@brand, @model, @plate, @vin, @client_id)";
 
-			DbHelper.ExecuteNonQuery(query, parameters);
+					DbHelper.ExecuteNonQuery(query, parameters);
+				}
+				else
+				{
+					// === ОБНОВЛЕНИЕ (UPDATE) ===
+					string query = @"
+                        UPDATE Cars 
+                        SET brand = @brand, 
+                            model = @model, 
+                            license_plate = @plate, 
+                            vin_code = @vin, 
+                            client_id = @client_id 
+                        WHERE car_id = " + _carId;
 
-			this.DialogResult = DialogResult.OK;
-			this.Close();
+					DbHelper.ExecuteNonQuery(query, parameters);
+				}
+
+				this.DialogResult = DialogResult.OK;
+				this.Close();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Ошибка при сохранении авто: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
 		}
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
