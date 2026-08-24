@@ -25,7 +25,6 @@ namespace StoARM
 		{
 			try
 			{
-				// Загружаем клиентов (твой исходный код)
 				string clientsQuery = "SELECT client_id, CONCAT(last_name, ' ', first_name) AS FullName FROM Clients";
 				DataTable clientsTable = DbHelper.ExecuteQuery(clientsQuery);
 
@@ -33,7 +32,7 @@ namespace StoARM
 				cmbClients.DisplayMember = "FullName";
 				cmbClients.ValueMember = "client_id";
 
-				// 3. Подтягиваем данные, если это редактирование
+				//Если это редактирование
 				if (_carId > 0)
 				{
 					this.Text = "Редактирование автомобиля №" + _carId;
@@ -49,7 +48,6 @@ namespace StoARM
 						tbPlate.Text = row["license_plate"].ToString();
 						tbVIN.Text = row["vin_code"].ToString();
 
-						// Выбираем владельца в выпадающем списке
 						cmbClients.SelectedValue = row["client_id"];
 					}
 				}
@@ -71,7 +69,6 @@ namespace StoARM
 
 			try
 			{
-				// Формируем параметры один раз для обоих случаев
 				SqlParameter[] parameters = {
 					new SqlParameter("@brand", tbBrand.Text.Trim()),
 					new SqlParameter("@model", tbModel.Text.Trim()),
@@ -82,7 +79,7 @@ namespace StoARM
 
 				if (_carId == 0)
 				{
-					// === ДОБАВЛЕНИЕ (INSERT) ===
+					//ДОБАВЛЕНИЕ (INSERT)
 					string query = @"
                         INSERT INTO Cars (brand, model, license_plate, vin_code, client_id) 
                         VALUES (@brand, @model, @plate, @vin, @client_id)";
@@ -91,7 +88,7 @@ namespace StoARM
 				}
 				else
 				{
-					// === ОБНОВЛЕНИЕ (UPDATE) ===
+					//ОБНОВЛЕНИЕ (UPDATE)
 					string query = @"
                         UPDATE Cars 
                         SET brand = @brand, 

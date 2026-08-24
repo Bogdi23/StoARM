@@ -13,10 +13,8 @@ namespace StoARM
 {
 	public partial class AddEditOrderForm : Form
 	{
-		// 1. Храним ID заказа. Если 0 — создаем новый, если > 0 — редактируем существующий
 		private int _orderId = 0;
 
-		// Универсальный конструктор: по умолчанию orderId = 0
 		public AddEditOrderForm(int orderId = 0)
 		{
 			InitializeComponent();
@@ -27,23 +25,19 @@ namespace StoARM
 		{
 			try
 			{
-				// 1. Загружаем автомобили
 				string carsQuery = "SELECT car_id, brand + ' ' + model + ' (' + license_plate + ')' AS CarInfo FROM Cars";
 				cmbCar.DataSource = DbHelper.ExecuteQuery(carsQuery);
 				cmbCar.DisplayMember = "CarInfo";
 				cmbCar.ValueMember = "car_id";
 
-				// 2. Загружаем услуги (сразу показываем цену для удобства)
 				string servicesQuery = "SELECT service_id, name + N' (' + CAST(price AS NVARCHAR) + N' руб.)' AS ServiceInfo FROM Services";
 				cmbService.DataSource = DbHelper.ExecuteQuery(servicesQuery);
 				cmbService.DisplayMember = "ServiceInfo";
 				cmbService.ValueMember = "service_id";
 
-				// 3. Загружаем запчасти (Берем только те, где остаток больше 0!)
 				string partsQuery = "SELECT part_id, part_type + N': ' + part_name + N' (' + CAST(price AS NVARCHAR) + N' руб.)' AS PartInfo FROM Inventory WHERE quantity > 0";
 				DataTable partsTable = DbHelper.ExecuteQuery(partsQuery);
 
-				// Добавляем искусственную строчку "Без запчастей", ведь клиент может приехать со своим маслом
 				DataRow emptyRow = partsTable.NewRow();
 				emptyRow["part_id"] = DBNull.Value;
 				emptyRow["PartInfo"] = "--- Без запчастей ---";
@@ -53,14 +47,12 @@ namespace StoARM
 				cmbPart.DisplayMember = "PartInfo";
 				cmbPart.ValueMember = "part_id";
 
-				// 4. Настраиваем статусы (их можно прописать прямо в коде, без базы)
 				cmbStatus.Items.Clear();
 				cmbStatus.Items.Add("В работе");
 				cmbStatus.Items.Add("Завершен");
 				cmbStatus.Items.Add("Отменен");
-				cmbStatus.SelectedIndex = 0; // По умолчанию ставим "В работе"
+				cmbStatus.SelectedIndex = 0; //По умолчанию "В работе"
 
-				// 5. ЕСЛИ ЭТО РЕДАКТИРОВАНИЕ (_orderId > 0) — Подтягиваем данные из базы!
 				if (_orderId > 0)
 				{
 					this.Text = "Редактирование заказа №" + _orderId;
@@ -74,7 +66,6 @@ namespace StoARM
 						cmbCar.SelectedValue = row["car_id"];
 						cmbService.SelectedValue = row["service_id"];
 
-						// Проверяем запчасть
 						if (row["part_id"] != DBNull.Value)
 							cmbPart.SelectedValue = row["part_id"];
 						else
@@ -92,7 +83,6 @@ namespace StoARM
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			// 1. Защита от дурака: проверяем, что основные поля выбраны
 			if (cmbCar.SelectedIndex == -1 || cmbService.SelectedIndex == -1 || cmbStatus.SelectedIndex == -1)
 			{
 				MessageBox.Show("Пожалуйста, выберите автомобиль, услугу и статус!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -101,15 +91,12 @@ namespace StoARM
 
 			try
 			{
-				// 2. Достаем ID (SelectedValue) из выпадающих списков
 				int carId = Convert.ToInt32(cmbCar.SelectedValue);
 				int serviceId = Convert.ToInt32(cmbService.SelectedValue);
 				string status = cmbStatus.SelectedItem.ToString();
 
-				// С запчастью хитрее: если выбрано "Без запчастей", там лежит DBNull
 				object partId = cmbPart.SelectedValue;
 
-				// 3. Формируем единый запрос с ТРАНЗАКЦИЕЙ
 				if (_orderId == 0)
 				{
 					string query = @"
@@ -128,21 +115,18 @@ namespace StoARM
 						END
             
 						COMMIT TRANSACTION;";
-					// 4. Передаем параметры
 					SqlParameter[] parameters = {
 						new SqlParameter("@car_id", carId),
 						new SqlParameter("@service_id", serviceId),
-						// Если partId пустой (null), отправляем в базу DBNull.Value
 						new SqlParameter("@part_id", partId ?? DBNull.Value),
 						new SqlParameter("@status", status)
 					};
 
-					// 5. Выполняем наш сложный запрос через уже готовый DbHelper
 					DbHelper.ExecuteNonQuery(query, parameters);
 				}
 				else
 				{
-					// === ОБНОВЛЕНИЕ СУЩЕСТВУЮЩЕГО (UPDATE) ===
+					//ОБНОВЛЕНИЕ (UPDATE)
 					string updateQuery = @"
                         UPDATE Orders 
                         SET car_id = @car_id, 

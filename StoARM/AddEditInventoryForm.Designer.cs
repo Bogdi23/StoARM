@@ -99,7 +99,7 @@
 			// 
 			// pnlHeader
 			// 
-			this.pnlHeader.BackColor = System.Drawing.SystemColors.Highlight;
+			this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(217)))), ((int)(((byte)(119)))), ((int)(((byte)(6)))));
 			this.pnlHeader.Controls.Add(this.lblTitle);
 			this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
 			this.pnlHeader.Location = new System.Drawing.Point(0, 0);

@@ -27,7 +27,6 @@ namespace StoARM
 
 				try
 				{
-					// ВНИМАНИЕ: Проверь названия колонок!
 					string query = "SELECT last_name, first_name, middle_name, phone_number FROM Clients WHERE client_id = " + _clientId;
 					DataTable dt = DbHelper.ExecuteQuery(query);
 
@@ -65,13 +64,13 @@ namespace StoARM
 
 				if (_clientId == 0)
 				{
-					// === ДОБАВЛЕНИЕ (INSERT) ===
+					//ДОБАВЛЕНИЕ (INSERT)
 					string query = "INSERT INTO Clients (last_name, first_name, middle_name, phone_number) VALUES (@last, @first, @middle, @phone)";
 					DbHelper.ExecuteNonQuery(query, parameters);
 				}
 				else
 				{
-					// === ОБНОВЛЕНИЕ (UPDATE) ===
+					//ОБНОВЛЕНИЕ (UPDATE)
 					string query = @"
                         UPDATE Clients 
                         SET last_name = @last, 

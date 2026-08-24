@@ -22,7 +22,6 @@ namespace StoARM
 		}
 		private void AddEditInventoryForm_Load(object sender, EventArgs e)
 		{
-			// 3. Подтягиваем данные, если это редактирование
 			if (_partId > 0)
 			{
 				this.Text = "Редактирование детали №" + _partId;
@@ -50,7 +49,6 @@ namespace StoARM
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			// 1. Проверка на пустые поля (добавили txtType)
 			if (string.IsNullOrWhiteSpace(tbPartType.Text) ||
 				string.IsNullOrWhiteSpace(tbPartName.Text) ||
 				string.IsNullOrWhiteSpace(tbPrice.Text) ||
@@ -60,7 +58,6 @@ namespace StoARM
 				return;
 			}
 
-			// 2. Проверка правильности ввода чисел
 			if (!decimal.TryParse(tbPrice.Text, out decimal price))
 			{
 				MessageBox.Show("Цена должна быть числом!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -73,10 +70,8 @@ namespace StoARM
 				return;
 			}
 
-			// 3. Сохранение в базу
 			try
 			{
-				// Формируем параметры один раз
 				SqlParameter[] parameters = {
 					new SqlParameter("@type", tbPartType.Text.Trim()),
 					new SqlParameter("@name", tbPartName.Text.Trim()),
@@ -86,13 +81,13 @@ namespace StoARM
 
 				if (_partId == 0)
 				{
-					// === ДОБАВЛЕНИЕ (INSERT) ===
+					//ДОБАВЛЕНИЕ (INSERT)
 					string query = "INSERT INTO Inventory (part_type, part_name, price, quantity) VALUES (@type, @name, @price, @quantity)";
 					DbHelper.ExecuteNonQuery(query, parameters);
 				}
 				else
 				{
-					// === ОБНОВЛЕНИЕ (UPDATE) ===
+					//ОБНОВЛЕНИЕ (UPDATE)
 					string query = @"
                         UPDATE Inventory 
                         SET part_type = @type, 

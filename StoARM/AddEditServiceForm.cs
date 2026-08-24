@@ -47,14 +47,12 @@ namespace StoARM
 		}
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			// Проверка на пустоту
 			if (string.IsNullOrWhiteSpace(tbName.Text) || string.IsNullOrWhiteSpace(tbPrice.Text))
 			{
 				MessageBox.Show("Заполните название услуги и цену!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return;
 			}
 
-			// Проверка, что цена — это число (decimal)
 			if (!decimal.TryParse(tbPrice.Text, out decimal price))
 			{
 				MessageBox.Show("Цена должна быть числом (например: 1500 или 1500,50)!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -63,21 +61,20 @@ namespace StoARM
 
 			try
 			{
-				// Формируем параметры один раз
 				SqlParameter[] parameters = {
 					new SqlParameter("@name", tbName.Text.Trim()),
-					new SqlParameter("@price", price) // Передаем проверенное число
+					new SqlParameter("@price", price)
                 };
 
 				if (_serviceId == 0)
 				{
-					// === ДОБАВЛЕНИЕ НОВОЙ УСЛУГИ (INSERT) ===
+					//ДОБАВЛЕНИЕ (INSERT)
 					string query = "INSERT INTO Services (name, price) VALUES (@name, @price)";
 					DbHelper.ExecuteNonQuery(query, parameters);
 				}
 				else
 				{
-					// === ОБНОВЛЕНИЕ СУЩЕСТВУЮЩЕЙ (UPDATE) ===
+					//ОБНОВЛЕНИЕ (UPDATE)
 					string query = @"
                         UPDATE Services 
                         SET name = @name, 

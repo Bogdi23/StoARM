@@ -23,12 +23,10 @@ namespace StoARM
 			RefreshAllData();
 		}
 
-		// Выносим загрузку в отдельный метод, чтобы потом вызывать его после добавления новых данных
 		public void RefreshAllData()
 		{
 			try
 			{
-				// Привязываем данные из базы к нашим таблицам на форме
 				dataGridOrders.DataSource = DbHelper.GetOrders();
 				dataGridClients.DataSource = DbHelper.GetClients();
 				dataGridCars.DataSource = DbHelper.GetCars();
@@ -52,7 +50,6 @@ namespace StoARM
 			{
 				AddEditClientForm clientForm = new AddEditClientForm();
 
-				// Открываем форму модально. Если пользователь нажал "Сохранить", обновляем таблицы
 				if (clientForm.ShowDialog() == DialogResult.OK)
 				{
 					RefreshAllData();
@@ -111,7 +108,7 @@ namespace StoARM
 			string tableName = "";
 			string primaryKey = "";
 
-			// 1. Определяем, на какой вкладке находится пользователь, и какую таблицу нужно править
+			//Определяем, на какой вкладке находится пользователь, и какую таблицу нужно править
 			switch (activeTab)
 			{
 				case "Заказы":
@@ -141,27 +138,24 @@ namespace StoARM
 					break;
 			}
 
-			// 2. Проверяем, что таблица найдена и в ней есть активная строка
+			//Проверяем, что таблица найдена и в ней есть активная строка
 			if (currentGrid == null || currentGrid.CurrentRow == null)
 			{
 				MessageBox.Show("Сначала выберите запись для удаления!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return;
 			}
 
-			// 3. Достаем ID удаляемой записи из текущей строки
+			// Достаем ID удаляемой записи из текущей строки
 			int recordId = Convert.ToInt32(currentGrid.CurrentRow.Cells[0].Value);
 
-			// 4. Спрашиваем подтверждение
 			DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить выбранную запись?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
 			if (result == DialogResult.Yes)
 			{
 				try
 				{
-					// 5. РАЗВИЛКА: Выполняем разные запросы в зависимости от таблицы
 					if (activeTab == "Заказы")
 					{
-						// Умное удаление заказа с возвратом запчасти на склад
 						string query = @"
 							BEGIN TRANSACTION;
                     
@@ -184,14 +178,10 @@ namespace StoARM
 					}
 					else
 					{
-						// Обычное удаление для всех остальных таблиц
 						string query = $"DELETE FROM {tableName} WHERE {primaryKey} = @id";
 						SqlParameter[] parameters = { new SqlParameter("@id", recordId) };
 						DbHelper.ExecuteNonQuery(query, parameters);
 					}
-
-					// 6. Обновляем все таблицы, чтобы изменения сразу отобразились
-					// Замени 'RefreshAllData()' на название твоего метода загрузки таблиц, если он называется иначе
 					RefreshAllData();
 				}
 				catch (Exception ex)
@@ -205,7 +195,6 @@ namespace StoARM
 			string activeTab = tabControl1.SelectedTab.Text;
 			DataGridView currentGrid = null;
 
-			// 1. Определяем, на какой вкладке находится пользователь
 			switch (activeTab)
 			{
 				case "Заказы":
@@ -227,19 +216,16 @@ namespace StoARM
 					return;
 			}
 
-			// 2. Проверяем, что в таблице выделена строка
 			if (currentGrid == null || currentGrid.CurrentRow == null)
 			{
 				MessageBox.Show("Сначала выберите запись для редактирования!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return;
 			}
 
-			// 3. Достаем ID выбранной записи из первой колонки
 			int recordId = Convert.ToInt32(currentGrid.CurrentRow.Cells[0].Value);
 
 			Form editForm = null;
 
-			// 4. Открываем нужную форму, передавая в неё ID (это переведет её в режим редактирования)
 			switch (activeTab)
 			{
 				case "Заказы":
@@ -259,11 +245,8 @@ namespace StoARM
 					break;
 			}
 
-			// 5. Открываем окно и, если пользователь нажал "Сохранить", обновляем все таблицы на экране
 			if (editForm != null && editForm.ShowDialog() == DialogResult.OK)
 			{
-				// Убедись, что метод обновления таблиц называется именно так 
-				// (если у тебя он называется по-другому, например LoadData(), замени эту строчку)
 				RefreshAllData();
 			}
 		}
