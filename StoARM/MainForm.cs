@@ -44,7 +44,7 @@ namespace StoARM
 		}
 		private void btnAdd_Click(object sender, EventArgs e)
 		{
-			string activeTab = tabControl1.SelectedTab.Text;
+			string activeTab = tabControl.SelectedTab.Text;
 
 			if (activeTab == "Клиенты")
 			{
@@ -103,7 +103,7 @@ namespace StoARM
 		}
 		private void btnDelete_Click(object sender, EventArgs e)
 		{
-			string activeTab = tabControl1.SelectedTab.Text;
+			string activeTab = tabControl.SelectedTab.Text;
 			DataGridView currentGrid = null;
 			string tableName = "";
 			string primaryKey = "";
@@ -192,7 +192,7 @@ namespace StoARM
 		}
 		private void btnEdit_Click(object sender, EventArgs e)
 		{
-			string activeTab = tabControl1.SelectedTab.Text;
+			string activeTab = tabControl.SelectedTab.Text;
 			DataGridView currentGrid = null;
 
 			switch (activeTab)
